@@ -27,7 +27,34 @@ class Calculator extends Component {
     }
 
     setOperation(operation) {
-        console.log(operation)
+        if (this.state.current === 0 ) {
+            this.setState({ operation, current: 1, clearDisplay: true })
+        } else {
+            const equals = operation === '='
+            const currentOperation = this.state.operation
+
+            const values = [...this.state.values]
+
+            if (currentOperation === '+') {
+                values[0] = values[0] + values[1]
+            } else if (currentOperation === '-') {
+                values[0] = values[0] - values[1]
+            } else if (currentOperation === '/') {
+                values[0] = values[0] / values[1]
+            } else if (currentOperation === '*') {
+                values[0] = values[0] * values[1]
+            }
+
+            values[1] = 0
+
+            this.setState({
+                displayValue: values[0],
+                operation: equals ? null : operation,
+                current: equals ? 0 : 1,
+                clearDisplay: !equals,
+                values
+            })
+        }
     }
 
     addDigit(n) {
@@ -71,7 +98,7 @@ class Calculator extends Component {
                 <Button label='+' operation click={this.setOperation} />
                 <Button label='0' double click={this.addDigit} />
                 <Button label='.' click={this.addDigit} />
-                <Button label='=' operation />
+                <Button label='=' operation click={this.setOperation} />
             </div>
         )
     }
